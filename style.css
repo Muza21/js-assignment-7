@@ -13,6 +13,10 @@ body{
     justify-content: space-between;
 }
 
+.time{
+    font-size: 32px;
+}
+
 .stopwatch, .timer{
     width: 100%;
     height: 100%;
@@ -24,11 +28,11 @@ body{
 }
 
 .stopwatch{
-    background-color: cornflowerblue;
+    background-color: #00B1d2ff; 
 }
 
 .timer{
-    background-color: aqua;
+    background-color: #fddb27ff;
 }
 
 .stopwatch h2, .timer h2{
@@ -38,17 +42,18 @@ body{
 .button{
     font-size: 16px;
     text-transform: capitalize;
+    color: #ffffff;
     font-weight: 700;
-    background-color: chocolate;
-    color: antiquewhite;
     border: none;
+    width: 100px;
     border-radius: 6px;
     padding: 10px 20px;
     cursor: pointer;
 }
 
+
 .button.random-button{
-    background-color: green;
+    background-color: #0f790f;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -57,17 +62,24 @@ body{
 }
 
 .button.random-button:hover{
-    background-color: rgb(6, 61, 6);
-    color: white;
-}
-
-.button:hover{
-    background-color: rgb(151, 65, 3);
-    color: white;
+    background-color: #063d06;
 }
 
 .button.time-button{
-    width: 100px;
+    background-color: #00B1d2ff;
+}
+
+.button.time-button:hover{
+    background-color: #005f70;
+}
+
+.button.stopwatch-button{
+    background-color: #fddb27ff;
+    color: #000000;
+}
+
+.button.stopwatch-button:hover{
+    background-color: #ac8f01;
 }
 
 .buttons-container{
