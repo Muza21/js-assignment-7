@@ -2,15 +2,25 @@
 
 // 1) In the center of the page there is a button that says Click me! When you hover over it with a 50% probability, it disappears and appears in a random place. When clicked, it does the same with 100% probability.
 
+const randomButton = document.querySelector('.random-button');
+
 const changeButtonPosition = () => {
-    const top = Math.floor(Math.random()*90);
-    const left = Math.floor(Math.random()*90);
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const buttonWidth = randomButton.clientWidth;
+    const buttonHeight = randomButton.clientHeight;
+    
+    const maxTop = Math.floor(100 - (buttonHeight / screenHeight) * 100);
+    const maxLeft = Math.floor(100 - (buttonWidth / screenWidth) * 100);
+
+    const top = Math.floor(Math.random()*maxTop);
+    const left = Math.floor(Math.random()*maxLeft);
+
     randomButton.style.top = `${top}%`;
     randomButton.style.left = `${left}%`;
     randomButton.style.transform = 'none';
 }
 
-const randomButton = document.querySelector('.random-button');
 randomButton.addEventListener('mouseover',()=>{
     if(Math.random()>0.5){
         changeButtonPosition();
@@ -32,19 +42,22 @@ const stopwatchStartButton = document.querySelector('.stopwatch-button.start');
 const stopwatchStopButton = document.querySelector('.stopwatch-button.stop');
 const stopwatchResetButton = document.querySelector('.stopwatch-button.reset');
 
+const formatTime = (milliseconds) => {
+    let hours = String(Math.floor(milliseconds / (1000*60*60))).padStart(2,'0');
+    let minutes = String(Math.floor(milliseconds / (1000*60)%60)).padStart(2,'0');
+    let seconds = String(Math.floor(milliseconds / 1000%60)).padStart(2,'0');
+    return `${hours}:${minutes}:${seconds}`;
+}
+
+const displayTime = (element, time) => {
+
+    element.textContent = formatTime(time);
+}
+
 const updateStopwatch = () => {
     const currentTime = Date.now();
     elapsedTime = currentTime - stopwatchStartTime;
-
-    let hours = Math.floor(elapsedTime / (1000*60*60));
-    let minutes = Math.floor(elapsedTime / (1000*60)%60);
-    let seconds = Math.floor(elapsedTime / 1000%60);
-
-    hours = String(hours).padStart(2,'0');
-    minutes = String(minutes).padStart(2,'0');
-    seconds = String(seconds).padStart(2,'0');
-
-    stopwatch.textContent = `${hours}:${minutes}:${seconds}`
+    displayTime(stopwatch, elapsedTime);
 }
 
 const startStopwatch = () => {
@@ -87,10 +100,10 @@ const timerStopButton = document.querySelector('.time-button.stop');
 const timerResetButton = document.querySelector('.time-button.reset');
 
 const timerAddButton = document.querySelector('.time-button.add');
-const timerSubstractButton = document.querySelector('.time-button.substract');
+const timerSubtractButton = document.querySelector('.time-button.substract');
 
 const updateTimer = () => {
-    if(timerIsRunning){
+    if(timerIsRunning && timerStartTime > 0){
         timerStartTime-=1000;
     }
 
@@ -98,18 +111,9 @@ const updateTimer = () => {
         clearInterval(timerInterval);
         timerStartTime = 0;
         timerIsRunning = false;
-        timer.textContent = '00:00:00';
-    }else{
-        let hours = Math.floor(timerStartTime / (1000*60*60));
-        let minutes = Math.floor(timerStartTime / (1000*60)%60);
-        let seconds = Math.floor(timerStartTime / 1000%60);
-
-        hours = String(hours).padStart(2,'0');
-        minutes = String(minutes).padStart(2,'0');
-        seconds = String(seconds).padStart(2,'0');
-
-        timer.textContent = `${hours}:${minutes}:${seconds}`
     }
+
+    displayTime(timer,timerStartTime);
 }
 
 const startTimer = () => {
@@ -137,7 +141,7 @@ const addTime = () => {
     timerStartTime+=ONE_MINUTE_IN_MILLISECONDS
     updateTimer();
 }
-const substractTime = () => {
+const subtractTime = () => {
     if(timerStartTime-ONE_MINUTE_IN_MILLISECONDS >= 0) {
         timerStartTime -= ONE_MINUTE_IN_MILLISECONDS
     }
@@ -145,7 +149,7 @@ const substractTime = () => {
 }
 
 timerAddButton.addEventListener('click',addTime);
-timerSubstractButton.addEventListener('click',substractTime);
+timerSubtractButton.addEventListener('click',subtractTime);
 
 timerStartButton.addEventListener('click',startTimer);
 timerStopButton.addEventListener('click',stopTimer);
