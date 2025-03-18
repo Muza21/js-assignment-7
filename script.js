@@ -75,11 +75,78 @@ stopwatchStartButton.addEventListener('click', startStopwatch);
 stopwatchStopButton.addEventListener('click', stopStopwatch);
 stopwatchResetButton.addEventListener('click',resetStopwatch);
 
-let timerStartTime;
+const ONE_MINUTE_IN_MILLISECONDS = 60 * 1000;
+let timerStartTime = 0;
 let timerInterval;
+let timerIsRunning = false;
 
 const timer = document.querySelector('.timer .time');
 
 const timerStartButton = document.querySelector('.time-button.start');
 const timerStopButton = document.querySelector('.time-button.stop');
 const timerResetButton = document.querySelector('.time-button.reset');
+
+const timerAddButton = document.querySelector('.time-button.add');
+const timerSubstractButton = document.querySelector('.time-button.substract');
+
+const updateTimer = () => {
+    if(timerIsRunning){
+        timerStartTime-=1000;
+    }
+
+    if(timerStartTime <= 0){
+        clearInterval(timerInterval);
+        timerStartTime = 0;
+        timerIsRunning = false;
+        timer.textContent = '00:00:00';
+    }else{
+        let hours = Math.floor(timerStartTime / (1000*60*60));
+        let minutes = Math.floor(timerStartTime / (1000*60)%60);
+        let seconds = Math.floor(timerStartTime / 1000%60);
+
+        hours = String(hours).padStart(2,'0');
+        minutes = String(minutes).padStart(2,'0');
+        seconds = String(seconds).padStart(2,'0');
+
+        timer.textContent = `${hours}:${minutes}:${seconds}`
+    }
+}
+
+const startTimer = () => {
+    if(!timerIsRunning){
+        timerInterval = setInterval(updateTimer,1000);
+        timerIsRunning = true;
+    }
+}
+
+const stopTimer = () => {
+    if(timerIsRunning){
+        clearInterval(timerInterval);
+        timerIsRunning = false;
+    }
+}
+
+const resetTimer = () => {
+    clearInterval(timerInterval);
+    timerStartTime = 0;
+    timerIsRunning = false;
+    timer.textContent = '00:00:00';
+}
+
+const addTime = () => {
+    timerStartTime+=ONE_MINUTE_IN_MILLISECONDS
+    updateTimer();
+}
+const substractTime = () => {
+    if(timerStartTime-ONE_MINUTE_IN_MILLISECONDS >= 0) {
+        timerStartTime -= ONE_MINUTE_IN_MILLISECONDS
+    }
+    updateTimer();
+}
+
+timerAddButton.addEventListener('click',addTime);
+timerSubstractButton.addEventListener('click',substractTime);
+
+timerStartButton.addEventListener('click',startTimer);
+timerStopButton.addEventListener('click',stopTimer);
+timerResetButton.addEventListener('click',resetTimer);
